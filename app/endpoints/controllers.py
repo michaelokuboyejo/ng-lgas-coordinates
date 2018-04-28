@@ -7,10 +7,14 @@ __author__ = 'michaelokuboyejo'
 endpoints = Blueprint('api/v1', __name__, url_prefix='/api/v1')
 
 
-@endpoints.route('/lga/<string:state_code_or_state>', methods=['GET'])
+@endpoints.route('/lgas/<string:state_code_or_state>', methods=['GET'])
 def get_lga_in_state(state_code_or_state):
-    lgas = LGA.get_lgas_with_state_name_or_code(state_code_or_state)
-    return Response(dumps(lgas), mimetype='application/json')
+    lga_data = LGA.get_lga_with_state_name_or_code(state_code_or_state)
+    if lga_data is None:
+        return {'error': 'Data not Found'}, 404 # handle 404
+    else:
+        return Response(dumps(lga_data), mimetype='application/json')
+
 
 @endpoints.route('/lgas', methods=['GET'])
 def get_lgas():
